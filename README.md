@@ -8,3 +8,8 @@
 
 Presents how below code gave different results in different versions of GCC compiler (4.X against 5.X and later)
 `auto x {1};`
+
+2. Recursive iteration over tuple using SFINAE
+
+My idea (with hint of Marcin you know who) how to implement recursive iteration over tuple elements.
+First version uses C++11 functionality std::enable_if
