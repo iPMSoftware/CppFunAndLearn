@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Curly brackets initialization</title>
+    <style>
+        code {
+            background-color: black;
+            color: white;
+            display: block;
+            white-space: pre-wrap
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Curly brackets initialization</h1>
+    When code from main.cpp is compiled with gcc 4.9.4 and C++14 result of it is presented below:
+    <p>
+        <code>
+    #include <iostream>
+    int main() 
+    {
+        auto x {1};
+        std::cout << "x jest typem int: " << std::boolalpha << std::is_same<decltype(x),int>::value << std::endl; 
+        std::cout << "x jest typem std::initializer_list<int>: " << std::boolalpha << std::is_same<decltype(x),std::initializer_list<int>>::value << std::endl; 
+    } 
+
+        </code>
+    </p>
+    <p>
+        Output is following:
+    </p>
+    <code>
+    x jest typem int: false
+    x jest typem std::initializer_list<int>: true
+    </code>
+    </p>
+    But when compiled with GCC 5.5.0, output is different:
+    <p>
+        <code>
+    x jest typem int: true
+    x jest typem std::initializer_list<int>: false
+    </code>
+    </p>
+</body>
+
+</html>
