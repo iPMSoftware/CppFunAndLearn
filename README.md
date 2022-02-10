@@ -13,3 +13,4 @@ Presents how below code gave different results in different versions of GCC comp
 
 My idea (with hint of Marcin you know who) how to implement recursive iteration over tuple elements.
 First version uses C++11 functionality std::enable_if
+Iteration backward and forward are implemented with possibility to invoke custom function for every tuple element
