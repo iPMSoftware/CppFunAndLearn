@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Template recursive iteration over tuple</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+
+<body>
+    <h1>Template recursive iteration over tuple</h1>
+    Idea of this code came to my mind somewhere around 3 a.m. when I was taking care of my youngest son.
+    <p>Let's try to write general code for iteration over tuple elements in order to conduct custom operation on every one each of them.</p>
+    <p>First let's write some helpers for SFINAE</p>
+    <code>
+        struct true_type {
+            static constexpr bool value = true;
+        };
+        
+        struct false_type {
+            static constexpr bool value = false;
+        };
+
+        template<int N>
+        struct is_non_negative : true_type {};
+            
+        template<>
+        struct is_non_negative<-1> : false_type {};
+    </code>
+    <p>I've started to implement this for backward iteration.</p>
+    <p>My idea is presented below</p>
+    <code>
+        template<int index, typename F, typename... T>
+        typename std::enable_if<!is_non_negative<index>::value>::type
+        IterateBackward(F f,std::tuple<T...>& t) {}
+            
+        template<int index, typename F,typename... T>
+        typename std::enable_if<is_non_negative<index>::value>::type
+        IterateBackward(F f,std::tuple<T...>& t) {
+            f(std::get<index>(t));
+            IterateBackward<index-1>(f,t);
+        }
+    </code>
+    <p>What has been done here.</p>
+    <p>Function <b>IterateBackward</b>has three template arguments. First one is index of tuple element, second is function to be called for every each of them. Third one is parameter pack of used tuple.</p>
+    <p>Idea of this code is to invoke f function for every tuple element that has non negative index, and decrement index value after that, until index will have negative value and empty specialization will be choosen.</p>
+    <p>This is where helper struct <b>is_non_negative</b> comes into play. It inherits from true_type for general cases, but when template argument is negative (in this case -1 is enough), it inherits from false type.</p>
+    <p>This kind of struct is used as a template parameter for <b>std::enable_if</b></p>
+    <p>When index will have -1 value, empty specialization will be selected, because of condition <b>!is_non_negative<index>::value</b></p>
+    <p>Similar approach has been used for forward iteration</p>
+    <p>Some additional helper structures</p>
+    <code>
+        template<int N,int M>
+        struct is_same_value : std::false_type {};
+        
+        template<int N>
+        struct is_same_value<N,N> : std::true_type {};
+    </code>
+    <p>And code</p>
+    <code>
+        template<int index, int max_index, typename F, typename... T>
+        typename std::enable_if<is_same_value<index,max_index>::value>::type
+        IterateForward(F f,std::tuple<T...>& t) {}
+        
+        template<int index, int max_index, typename F, typename... T>
+        typename std::enable_if<!is_same_value<index,max_index>::value>::type
+        IterateForward(F f,std::tuple<T...>& t) {
+            f(std::get<index>(t));
+            IterateForward<index+1,max_index>(f,t);
+        }
+    </code>
+    <p>Idea is that general specialization of <b>IterateForward</b> will be used for each case when index will not be equal to max_index</p>
+    <p>When index reaches max_index value empty specialization will be selected and iteration will end.</p>
+    <div class="rawCode">
+        <a href="main.cpp">RAW CODE</a>
+    </div>
+</body>
+
+</html>
