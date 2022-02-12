@@ -9,7 +9,24 @@
 
 <body>
     <h1>4. Sufixes _t and _v in template metaprogramming in different c++ versions</h1>
-    <p>TBD</p>
+    <p>During evolution of C++, many syntax sugar has been added to make code more readable.</p>
+    <p>One of them are helpers added to type traits with suffixes _t and _v, like <b>is_same_v&ltT ></b> that is helper for <b>is_same&ltT >::value</b></p>
+    <p>Usage of these helpers can make code alittle bit more user friendly,let's see:</p>
+    <code>
+        template&lttypename T>
+        #if __cplusplus > 201402 //C++ 17
+        typename std::enable_if_t&ltstd::is_same_v&ltint,decltype(std::declval&ltT>().foo())>,int>
+        #elif __cplusplus > 201103 //C++ 14
+        typename std::enable_if_t&ltstd::is_same&ltint,decltype(std::declval&ltT>().foo())>::value,int>
+        #else //C++ 11
+        typename std::enable_if&ltstd::is_same&ltint,decltype(std::declval&ltT>().foo())>::value,int>::type
+        #endif
+        InvokeFoo(T t) {
+            return t.foo();
+        }        
+    </code>
+    <p><b>std::enable_if_t</b> has been introduced in C++14 and <b>std::is_same_v</b> in C++17</p>
+    <p>When using them these not good looking ::value and ::type fields can be ommited</p>
 
     <div class="rawCode">
         <a href="main.cpp">RAW CODE</a>
