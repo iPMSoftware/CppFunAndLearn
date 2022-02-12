@@ -9,8 +9,41 @@
 
 <body>
     <h1>Interface and implementation inheritance separation</h1>
-    <p>TBD</p>
-
+    <p>Sometimes during development, there is a need to add method to base pure virtual class that will be used only by one derived class.</p>
+    <p>One can say that it shows bad design. Well, maybe right, but product lifecycle is something totally different than early designs.</p>
+    <p>When adding implementation in derived class, it has to be done in every class, even empty. Of course, pure virtual base class can be changed to virtual class by adding some empty implementation in it, but I do not prefer to do that.</p>
+    <p>Solution that I prefer is taken from <a href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#c129-when-designing-a-class-hierarchy-distinguish-between-implementation-inheritance-and-interface-inheritance">Cpp CoreGuidelines chaper C129</a></p>
+    <p>I distinguish inheritance of interfaces and implementation</p>
+    <code>
+        class Interface {
+            public:
+            virtual void foo() = 0;
+        
+            virtual ~Interface() = default;
+        };
+        
+        class InterfaceImpl : virtual public Interface {
+            public:
+            void foo() override {
+                std::cout << __func__ << std::endl;
+            }
+        };
+        
+        class InterfaceExtended : virtual public Interface {
+            public:
+            virtual void bar() = 0;
+        };
+        
+        class InterfaceExtendedImpl : public InterfaceImpl, virtual public InterfaceExtended {
+            public:
+            void bar() override {
+                std::cout << __func__ << std::endl;
+            }
+        };
+    </code>
+    <p><b>virtual</b> inheritance is needed, because if not, calling <b>foo</b> (if not virtual) would be ambigous</p>
+    <p>Class diagram can be seen below:</p>
+    <img src="class_diagram.png">
     <div class="rawCode">
         <a href="main.cpp">RAW CODE</a>
     </div>

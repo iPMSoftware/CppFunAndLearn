@@ -8,19 +8,19 @@ class Interface {
     virtual ~Interface() = default;
 };
 
-class InterfaceImpl : virtual public Interface {
+class InterfaceImpl :  public Interface {
     public:
     void foo() override {
         std::cout << __func__ << std::endl;
     }
 };
 
-class InterfaceExtended : virtual public Interface {
+class InterfaceExtended :  public Interface {
     public:
     virtual void bar() = 0;
 };
 
-class InterfaceExtendedImpl : public InterfaceImpl, public InterfaceExtended {
+class InterfaceExtendedImpl : public InterfaceImpl,  public InterfaceExtended {
     public:
     void bar() override {
         std::cout << __func__ << std::endl;
