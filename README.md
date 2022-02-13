@@ -22,3 +22,7 @@ How to distinguish inheritance of interfaces and their implementaion using virtu
 4. Sufixes _t and _v in template metaprogramming in different c++ versions
 
 How small syntax sugar can make code a little bit more readable
+
+5. SQL query
+
+Implement simple sql interface with builder like design for queries
